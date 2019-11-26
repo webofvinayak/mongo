@@ -57,13 +57,19 @@ const newPerson = new Person({
 //Fruit.insertMany([apple,banana,kiwi],function(err){
   //if(err){console.log(err)};  });
 //newPerson.save();
+Fruit.updateOne({_id:"5ddd06b65bcece2706afc57c"},{name:"Orange"},function(err){
+  if(err){console.log("failed to update Database !!");}
+
+});
+
+Fruit.deleteOne({_id:"5ddd09eddd4ea627eb53ca9a"},function(err){ console.log(err);});
+
+//Person.deleteMany({name:"vinayak"},function(err){});
 
 Fruit.find(function(err,allFruits){
   allFruits.forEach(function(d){
     console.log(d.name);
-  });
-
-  mongoose.connection.close();
+      });
+    mongoose.connection.close();
 //if(err){console.log(err);}else{console.log(allFruits);}
-
 });
