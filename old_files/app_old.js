@@ -1,28 +1,29 @@
-const mongoose = require('mongoose');
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 
-// MongoClient constructor. in mongoose is shorter
-mongoose.connect("mongodb://localhost:27017/fruitsDB",{ useNewUrlParser: true,useUnifiedTopology: true });
+// Connection URL
+const url = 'mongodb://localhost:27017';
 
+// Database Name
+const dbName = 'fruitsDB';
 
-const fruitSchema= new mongoose.Schema({
-  name: String,
-  rating: Number,
-  review: String
+// Create a new MongoClient
+const client = new MongoClient(url,{ useUnifiedTopology: true });
+
+// Use connect method to connect to the Server
+client.connect(function(err) {
+  assert.equal(null, err);
+  console.log("Connected successfully to server");
+
+  const db = client.db(dbName);
+
+insertDocuments(db,function(){
+  findDocuments(db, function() {
+     client.close();
+   });
 });
 
-//create collections
-
-const Fruit = mongoose.model("Fruit",fruitSchema);
-
-const newFruit= new Fruit({
-  name: "Apple",
-  rating:7,
-  review: "awesome"
 });
-
-newFruit.save();
-
-
 
 const insertDocuments = function(db, callback) {
   // Get the documents collection
