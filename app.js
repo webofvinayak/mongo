@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
 
 // MongoClient constructor. in mongoose is shorter
-mongoose.connect("mongodb://localhost:27017/fruitsDB",{ useNewUrlParser: true,useUnifiedTopology: true });
-
+mongoose.connect("mongodb://localhost:27017/peopleDB",{ useNewUrlParser: true,useUnifiedTopology: true });
 
 const fruitSchema= new mongoose.Schema({
-  name: String,
-  rating: Number,
+  name:{
+    type:String,
+    required:[true,"Name is not entered !!"]
+    },
+  rating:{
+    type:Number,
+    min:1,
+    max:10 },
   review: String
 });
 
@@ -14,53 +19,51 @@ const fruitSchema= new mongoose.Schema({
 
 const Fruit = mongoose.model("Fruit",fruitSchema);
 
-const newFruit= new Fruit({
+const apple = new Fruit({
   name: "Apple",
   rating:7,
   review: "awesome"
 });
 
-newFruit.save();
+const kiwi =new Fruit({
+  name:"kiwi",
+  rating:9,
+  review:"best in category"
+});
+
+const banana =new Fruit({
+  name:"Banana",
+  rating:6,
+  review:"good"
+});
+//kiwi.save();
 
 
+const peopleSchema= new mongoose.Schema({
+  name: String,
+  age: Number,
 
-const insertDocuments = function(db, callback) {
-  // Get the documents collection
-  const collection = db.collection('fruits');
-  // Insert some documents
-  collection.insertMany([
-      {
-        name:"Apple",
-        score:8,
-        review:"great Fruit"
-      },
-      {
-        name:"Orange",
-        score:6,
-        review:"kinda sour"
-      },
-      {
-        name:"Banana",
-        score:9,
-        review:"Great stuff"
-      }
-  ], function(err, result) {
-    assert.equal(err, null);
-    assert.equal(3, result.result.n);
-    assert.equal(3, result.ops.length);
-    console.log("Inserted 3 documents into the collection");
-    callback(result);
   });
-}
 
-const findDocuments = function(db, callback) {
-  // Get the documents collection
-  const collection = db.collection('fruits');
-  // Find some documents
-  collection.find({}).toArray(function(err, docs) {
-    assert.equal(err, null);
-    console.log("Found the following records");
-    console.log(docs)
-    callback(docs);
+//create collections
+
+const Person = mongoose.model("People",peopleSchema);
+
+const newPerson = new Person({
+  name: "Vinayak",
+  age:31,
+
+});
+//Fruit.insertMany([apple,banana,kiwi],function(err){
+  //if(err){console.log(err)};  });
+//newPerson.save();
+
+Fruit.find(function(err,allFruits){
+  allFruits.forEach(function(d){
+    console.log(d.name);
   });
-}
+
+  mongoose.connection.close();
+//if(err){console.log(err);}else{console.log(allFruits);}
+
+});
